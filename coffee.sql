@@ -26,7 +26,6 @@ FOREIGN KEY(batchID) REFERENCES batch(batchID) ON DELETE CASCADE);
 CREATE TABLE review(
 reviewID INTEGER PRIMARY KEY AUTOINCREMENT ,
 points INT,
-roastedCoffeeID INT,
 reviewNote VARCHAR(200),
 coffeeID INT NOT NULL,
 userID INT NOT NULL,
@@ -34,6 +33,7 @@ tastingDate TEXT DEFAULT(date('now')),
 FOREIGN KEY(roastedCoffeeID) REFERENCES roastedCoffee(roastedCoffeeID) ON DELETE CASCADE,
 FOREIGN KEY(userID) REFERENCES coffeeUser(userID) ON DELETE CASCADE,
 CHECK (points > -1 AND points < 11));
+
 
 
 CREATE TABLE batch( 
