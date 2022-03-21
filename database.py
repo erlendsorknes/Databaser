@@ -13,6 +13,8 @@ def createUser():
     con.close()
 
 
+
+
 def userStory2():
     con = sqlite3.connect("database.db")
     cursor = con.cursor()
@@ -65,7 +67,10 @@ def userStory5():
 
 def main():
     storyInput = str(input("Which userstory do you want to perform? "))
-    if (storyInput == '2'):
+
+    if (storyInput == '1'):
+        createUser()
+    elif (storyInput == '2'):
         userStory2()
     elif (storyInput == '3'):
         userStory3()
