@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import DatabaseError
+from datetime import date
 
 
 def isValidEmail(email):
@@ -94,12 +95,14 @@ def userStory1():
 
 
 def userStory2():
+    year = date.today().year
     con = sqlite3.connect("CoffeeDatabase.db")
     cursor = con.cursor()
-    cursor.execute("SELECT coffeeUser.fullname, COUNT(DISTINCT reviewID) as antall_typer FROM coffeeUser NATURAL JOIN "
-                   "review GROUP BY coffeeUser.userID ORDER BY antall_typer DESC")
+    cursor.execute(f'''SELECT coffeeUser.fullname, COUNT(DISTINCT reviewID) as antall_typer FROM coffeeUser NATURAL JOIN 
+                   review WHERE review.tastingDate LIKE '%{year}%' GROUP BY coffeeUser.userID ORDER BY antall_typer 
+                   DESC''')
     rows = cursor.fetchall()
-    print("Brukere som har anmeldt flest unike kaffer i synkende rekkefølge 👫☕️: \n")
+    print("Brukere som har anmeldt flest unike kaffer i synkende rekkefølge: \n")
     for row in rows:
         print(row)
     con.close()
