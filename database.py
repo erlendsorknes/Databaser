@@ -13,7 +13,7 @@ def isValidEmail(email):
     return row[0], row[2]
 
 
-def loggInn():
+def logIn():
     while True:
         try:
             coffeeUserID, pw = isValidEmail(input("Skriv inn epostadresse: "))
@@ -45,7 +45,7 @@ def findRoastery(roasteryName):
 
 
 def makeReview():
-    userID = loggInn()
+    userID = logIn()
     while True:
         try:
             roasteryID = findRoastery(input("Skriv inn brenneriet kaffen er fra: "))
