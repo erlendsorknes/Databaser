@@ -27,7 +27,7 @@ CREATE TABLE review(
 reviewID INTEGER PRIMARY KEY AUTOINCREMENT ,
 points INT,
 reviewNote VARCHAR(200),
-coffeeID INT NOT NULL,
+roastedCoffeeID INT NOT NULL,
 userID INT NOT NULL,
 tastingDate TEXT DEFAULT(date('now')),
 FOREIGN KEY(roastedCoffeeID) REFERENCES roastedCoffee(roastedCoffeeID) ON DELETE CASCADE,

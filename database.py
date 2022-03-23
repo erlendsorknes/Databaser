@@ -3,7 +3,7 @@ from sqlite3 import DatabaseError
 
 
 def isValidEmail(email):
-    connection = sqlite3.connect("database.db")
+    connection = sqlite3.connect("CoffeeDatabase.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM coffeeUser WHERE email = ?", (email,))
     row = cursor.fetchone()
@@ -34,7 +34,7 @@ def logIn():
 
 
 def findRoastery(roasteryName):
-    connection = sqlite3.connect("database.db")
+    connection = sqlite3.connect("CoffeeDatabase.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM coffeeRoastery WHERE roasteryName = ?", (roasteryName,))
     row = cursor.fetchone()
@@ -64,13 +64,13 @@ def makeReview():
             break
 
     while True:
-        con = sqlite3.connect("database.db")
+        con = sqlite3.connect("CoffeeDatabase.db")
         cursor = con.cursor()
         points = int(input("Hva vil du rangere kaffen? (1-10) "))
         note = str(input("Forklar kaffen: "))
         date = str(input("Hvilken dato smakte du kaffen? "))
-        cursor.execute("INSERT INTO review VALUES (?,?,?,?,?,?,?)",
-                       (None, points, roastedCoffeeID, note, roastedCoffeeID, userID, date,))
+        cursor.execute("INSERT INTO review VALUES (?,?,?,?,?,?)",
+                       (None, points, note, roastedCoffeeID, userID, date,))
         print("Takk for anmeldelsen!")
         con.commit()
         con.close()
@@ -78,7 +78,7 @@ def makeReview():
 
 
 def validCoffeeFromRoastery(coffee, roasteryID):
-    connection = sqlite3.connect("database.db")
+    connection = sqlite3.connect("CoffeeDatabase.db")
     cursor = connection.cursor()
     cursor.execute("SELECT roastedCoffeeID FROM roastedCoffee WHERE name = ? AND roastedCoffeeID = ? ",
                    (coffee, roasteryID))
@@ -94,7 +94,7 @@ def userStory1():
 
 
 def userStory2():
-    con = sqlite3.connect("database.db")
+    con = sqlite3.connect("CoffeeDatabase.db")
     cursor = con.cursor()
     cursor.execute("SELECT coffeeUser.fullname, COUNT(DISTINCT reviewID) as antall_typer FROM coffeeUser NATURAL JOIN "
                    "review GROUP BY coffeeUser.userID ORDER BY antall_typer DESC")
@@ -106,7 +106,7 @@ def userStory2():
 
 
 def userStory3():
-    con = sqlite3.connect("database.db")
+    con = sqlite3.connect("CoffeeDatabase.db")
     cursor = con.cursor()
     cursor.execute("SELECT roastedCoffee.name, coffeeRoastery.roasteryName, avg(points) as avergePoints, kiloPrice "
                    "FROM review NATURAL JOIN roastedCoffee NATURAL JOIN coffeeRoastery GROUP BY roastedCoffeeID ORDER "
@@ -119,12 +119,14 @@ def userStory3():
 
 
 def userStory4():
-    con = sqlite3.connect("database.db")
+    con = sqlite3.connect("CoffeeDatabase.db")
     cursor = con.cursor()
-    cursor.execute("SELECT roastedCoffee.name, coffeeRoastery.roasteryName "
-                   "FROM review NATURAL JOIN roastedCoffee NATURAL JOIN coffeeRoastery "
-                   "WHERE reviewNote LIKE '%floral%' OR roastedCoffee.description LIKE '%floral%' GROUP BY "
-                   "roastedCoffee.roastedCoffeeID")
+    cursor.execute("SELECT roastedCoffee.description, coffeeRoastery.roasteryName "
+                   "FROM roastedCoffee NATURAL JOIN coffeeRoastery "
+                   "WHERE roastedCoffee.description LIKE '%floral%' GROUP BY "
+                   "roastedCoffee.roastedCoffeeID "
+                   "UNION SELECT review.reviewNote, coffeeRoastery.roasteryName FROM review NATURAL JOIN roastedCoffee NATURAL JOIN coffeeRoastery WHERE reviewNote LIKE "
+                   "'%floral%' GROUP BY roastedCoffeeID " )
     rows = cursor.fetchall()
     print("Hver kaffe som har en anmeldelse eller beskrivelse som er beskrevet som 'Floral: \n ")
     for row in rows:
@@ -133,7 +135,7 @@ def userStory4():
 
 
 def userStory5():
-    con = sqlite3.connect("database.db")
+    con = sqlite3.connect("CoffeeDatabase.db")
     cursor = con.cursor()
     cursor.execute("SELECT roastedCoffee.name, coffeeRoastery.roasteryName "
                    "FROM roastedCoffee NATURAL JOIN coffeeRoastery NATURAL JOIN batch JOIN farm f on batch.farmID = "
