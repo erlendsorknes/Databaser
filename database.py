@@ -190,6 +190,7 @@ def seeStatistics():
                          "Trykk 's' for å søke etter et ord kaffen har blitt beskrevet som \n"
                          "Trykk 'k' for å finne de kaffene brukere er mest fornøyd med tanke på pris! \n"
                          "Trykk 'm' for å gå tilbake til hovedmenyen \n"
+                         "Trykk 'u' for å se Ukas kaffer: "
                          "Trykk 'q' for å gå tilbake:  "))
         if valg == 's':
             search = str(input("Hvilket ord vil du søke etter? \n"))
@@ -204,6 +205,9 @@ def seeStatistics():
             break
         elif valg == 'm':
             mainMenu()
+
+        elif valg == 'u':
+            userStory5()
 
         else:
             print("Skjønte ikke, prøv igjen")
