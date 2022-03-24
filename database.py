@@ -16,6 +16,12 @@ def isValidEmail(email):
     return row[0], row[2]
 
 
+
+
+
+
+
+
 def validRegisterEmail(email):
     connection = sqlite3.connect("CoffeeDatabase.db")
     cursor = connection.cursor()
@@ -27,50 +33,14 @@ def validRegisterEmail(email):
         return -1
 
 
-def makeReview(userID):
-    while True:
-        try:
-            roasteryID = findRoastery(input("Skriv inn brenneriet kaffen er fra: "))
-        except DatabaseError:
-            print("Dette brenneriet finnes ikke")
-            continue
-        else:
-            break
-    while True:
-        try:
-            roastedCoffeeID = validCoffeeFromRoastery(input("Hva heter kaffen? "), roasteryID)
-        except:
-            print("Denne kaffen finnes ikke")
-            continue
-        else:
-            break
-
-    while True:
-        con = sqlite3.connect("CoffeeDatabase.db")
-        cursor = con.cursor()
-        points = int(input("Hva vil du rangere kaffen? (1-10) "))
-        note = str(input("Forklar kaffen: "))
-        date = str(input("Hvilken dato smakte du kaffen? "))
-        cursor.execute("INSERT INTO review VALUES (?,?,?,?,?,?)",
-                       (None, points, note, roastedCoffeeID, userID, date,))
-        print("Takk for anmeldelsen!")
-        con.commit()
-        con.close()
-        break
 
 
-def userStory5():
-    con = sqlite3.connect("CoffeeDatabase.db")
-    cursor = con.cursor()
-    cursor.execute("SELECT roastedCoffee.name, coffeeRoastery.roasteryName "
-                   "FROM roastedCoffee NATURAL JOIN coffeeRoastery NATURAL JOIN batch JOIN farm f on batch.farmID = "
-                   "f.farmID JOIN processingMethod pM on batch.processingMethodID = pM.processingMethodID WHERE(NOT("
-                   "pM.name == 'Vasket')) AND (f.country == 'Colombia') OR (f.country == 'Rwanda') ")
-    rows = cursor.fetchall()
-    print("Kaffer og dens brennerier som ikke er 'Vasket', men kommmer fra Colombia eller Rwanda: \n")
-    for row in rows:
-        print(row)
-    con.close()
+
+
+
+
+
+
 
 
 def registerUser():
@@ -90,7 +60,6 @@ def registerUser():
         row = cursor.fetchone()
         global userID
         userID = row[0]
-        print(row[0])
         mainMenu()
 
 
@@ -127,6 +96,8 @@ def findRoastery(roasteryName):
     return row[0]
 
 
+
+
 def validCoffeeFromRoastery(coffee, roasteryID):
     connection = sqlite3.connect("CoffeeDatabase.db")
     cursor = connection.cursor()
@@ -137,6 +108,42 @@ def validCoffeeFromRoastery(coffee, roasteryID):
         raise DatabaseError
     connection.close()
     return row[0]
+
+
+
+
+def makeReview(userID):
+    while True:
+        try:
+            roasteryID = findRoastery(input("Skriv inn brenneriet kaffen er fra: "))
+        except DatabaseError:
+            print("Dette brenneriet finnes ikke")
+            continue
+        else:
+            break
+    while True:
+        try:
+            roastedCoffeeID = validCoffeeFromRoastery(input("Hva heter kaffen? "), roasteryID)
+        except:
+            print("Denne kaffen finnes ikke")
+            continue
+        else:
+            break
+
+    while True:
+        con = sqlite3.connect("CoffeeDatabase.db")
+        cursor = con.cursor()
+        points = int(input("Hva vil du rangere kaffen? (1-10) "))
+        note = str(input("Forklar kaffen: "))
+        date = str(input("Hvilken dato smakte du kaffen? "))
+        cursor.execute("INSERT INTO review VALUES (?,?,?,?,?,?)",
+                       (None, points, note, roastedCoffeeID, userID, date,))
+        print("Takk for anmeldelsen!")
+        con.commit()
+        con.close()
+        break
+
+
 
 
 def userStory2():
@@ -153,6 +160,8 @@ def userStory2():
     con.close()
 
 
+
+
 def userStory3():
     con = sqlite3.connect("CoffeeDatabase.db")
     cursor = con.cursor()
@@ -164,6 +173,8 @@ def userStory3():
     for row in rows:
         print(row)
     con.close()
+
+
 
 
 def userStory4(input):
@@ -182,6 +193,28 @@ def userStory4(input):
     con.close()
 
 
+
+
+
+
+def userStory5():
+    con = sqlite3.connect("CoffeeDatabase.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT roastedCoffee.name, coffeeRoastery.roasteryName "
+                   "FROM roastedCoffee NATURAL JOIN coffeeRoastery NATURAL JOIN batch JOIN farm f on batch.farmID = "
+                   "f.farmID JOIN processingMethod pM on batch.processingMethodID = pM.processingMethodID WHERE(NOT("
+                   "pM.name == 'Vasket')) AND (f.country == 'Colombia') OR (f.country == 'Rwanda') ")
+    rows = cursor.fetchall()
+    print("Kaffer og dens brennerier som ikke er 'Vasket', men kommmer fra Colombia eller Rwanda: \n")
+    for row in rows:
+        print(row)
+    con.close()
+
+
+
+
+
+
 def seeStatistics():
     active = True
     while active:
@@ -190,7 +223,7 @@ def seeStatistics():
                          "Trykk 's' for å søke etter et ord kaffen har blitt beskrevet som \n"
                          "Trykk 'k' for å finne de kaffene brukere er mest fornøyd med tanke på pris! \n"
                          "Trykk 'm' for å gå tilbake til hovedmenyen \n"
-                         "Trykk 'u' for å se Ukas kaffer: "
+                         "Trykk 'u' for å se Ukas kaffer: \n"
                          "Trykk 'q' for å gå tilbake:  "))
         if valg == 's':
             search = str(input("Hvilket ord vil du søke etter? \n"))
@@ -201,30 +234,64 @@ def seeStatistics():
         elif valg == 'k':
             userStory3()
 
-        elif valg == 'q':
-            break
+
         elif valg == 'm':
             mainMenu()
 
         elif valg == 'u':
             userStory5()
 
+        elif valg == 'q':
+            break
+
         else:
             print("Skjønte ikke, prøv igjen")
+
+
+def userStories():
+    while True:
+        print("Velkommen til brukerhistoriene! \n")
+        story = str(input((
+                                "Trykk '2' for å utføre brukerhistorie 2 \n"
+                                "Trykk '3' for å utføre brukerhistorie 3 \n"
+                                "trykk '4' for å utføre brukerhistorie 4 \n"
+                                "Trykk på '5' for å utføre brukerhistorie 5\n"
+                                "Trykk på 'q' for å gå tilbake")))
+
+        if story == '2':
+            userStory2()
+        elif story == '3':
+            userStory3()
+        elif story == '4':
+            userStory4('Floral')
+        elif story == '5':
+            userStory5()
+        elif story == 'q':
+            break
+        else:
+            print("Skriv inn noe gyldig")
+            continue
+
+
+
 
 
 def mainMenu():
     while True:
         print("Velkommen til hovedmenyen! \n")
         storyInput = str(input(("Trykk 'o' for opprette nytt innlegg \n"
-                                "Trykk 's' for å se statistikk \n"
+                                "Trykk 's' for å se statistikk, \n"
+                                "Trykk 'u' for å se brukerhistoriene \n"
                                 "trykk 'q' for å logge ut ")))
         if storyInput == 'o':
             makeReview(userID)
         elif storyInput == 's':
             seeStatistics()
+        elif storyInput == 'u':
+            userStories()
         elif storyInput == 'q':
             break
+
         else:
             print("Kunne ikke lese")
 
@@ -241,6 +308,5 @@ def main():
             break
         else:
             print("Skriv inn et gyldig valg")
-
 
 print(main())
