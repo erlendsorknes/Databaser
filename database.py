@@ -143,9 +143,6 @@ def makeReview(userID):
         con.close()
         break
 
-
-
-
 def userStory2():
     year = date.today().year
     con = sqlite3.connect("CoffeeDatabase.db")
